@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로또 번호 생성</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #282c34;
+        }
+        #fallingNumbers {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .number {
+            position: absolute;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            user-select: none;
+            pointer-events: none;
+            top: -50px; /* 시작 위치 상단 밖 */
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            0% { top: -50px; }
+            100% { top: 100vh; } /* 화면 끝까지 떨어짐 */
+        }
+        #container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="fallingNumbers"></div> <!-- 떨어지는 숫자를 위한 컨테이너 -->
+    <div id="container">
+        <h1 style="color: white; font-size: 60px;">소소한가의 로또 번호 생성기</h1>
+        <a href="https://blog.naver.com/my_life_soso" target="_blank" style="color: white; font-size: 40px;">blog.naver.com/my_life_soso</a><br>
+        <button onclick="generateLottoNumbers()" style="margin-top: 20px; padding: 15px 30px; font-size: 40px; width: auto; height: auto;">클릭하여 번호 생성</button>
+        <p id="lottoNumbers" style="color: white; font-size: 50px;"></p>
+    </div>
+
+
+    <script>
+        // 로또 번호 생성 함수
+        function generateLottoNumbers() {
+            var lottoNumbers = [];
+            var n = 6;
+            while(lottoNumbers.length < n){
+                var r = Math.floor(Math.random() * 45) + 1;
+                if(lottoNumbers.indexOf(r) === -1) lottoNumbers.push(r);
+            }
+            lottoNumbers.sort(function(a, b){return a - b});
+            document.getElementById("lottoNumbers").innerHTML = lottoNumbers.join(', ');
+        }
+
+        // 떨어지는 숫자 생성 함수
+        function createFallingNumber() {
+            const fallingNumber = document.createElement('div');
+            fallingNumber.classList.add('number');
+            fallingNumber.textContent = Math.floor(Math.random() * 45) + 1; // 1~45 사이의 숫자
+            fallingNumber.style.left = Math.random() * 100 + 'vw';
+            fallingNumber.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2~5초 사이의 속도
+            fallingNumber.style.opacity = Math.random();
+            fallingNumber.style.fontSize = Math.random() * 20 + 20 + 'px'; // 10~30px 사이의 크기
+
+            document.getElementById('fallingNumbers').appendChild(fallingNumber);
+
+            setTimeout(() => {
+                fallingNumber.remove();
+            }, 5000); // 5초 후에 숫자 삭제
+        }
+
+        // 매 100ms마다 새로운 숫자 생성
+        setInterval(createFallingNumber, 100);
+    </script>
+</body>
+</html>
